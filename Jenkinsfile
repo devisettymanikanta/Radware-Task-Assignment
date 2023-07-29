@@ -11,11 +11,16 @@ pipeline {
         VERSION = '1.2.0'
         ARTIFACTORY_SERVER = 'http://3.84.26.167:8082/artifactory'
         ARTIFACTORY_USER = 'ciadmin'
-        ARTIFACTORY_PASSWORD = 'Krishna@12345'
+        ARTIFACTORY_PASSWORD = 'Mani@12345'
         ARTIFACTORY_REPOSITORY = "store-artifacts/${VERSION}"
     }
     
     stages {
+        stage('SCM Checkout') {
+            steps{
+            checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/devisettymanikanta/Radware-Task-Assignment.git']])
+            }
+        }
         stage('Build') {
             steps {
                 sh 'echo "Building the application"'
@@ -26,14 +31,12 @@ pipeline {
         stage('Test') {
             steps {
                 sh 'echo "Running tests"'
-                // Add your test commands here
             }
         }
         
         stage('Package') {
             steps {
-                sh 'echo "Packaging the application"'
-                // Add your packaging commands here
+                sh 'echo "Packaging the application"'  
             }
         }
         
