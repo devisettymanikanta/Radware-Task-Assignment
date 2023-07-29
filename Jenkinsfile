@@ -27,20 +27,7 @@ pipeline {
                 sh 'python3 zip_job.py'
             }
         }
-        
-        stage('Test') {
-            steps {
-                sh 'echo "Running tests"'
-            }
-        }
-        
-        stage('Package') {
-            steps {
-                sh 'echo "Packaging the application"'  
-            }
-        }
-        
-        stage('Deploy') {
+        stage('Publish') {
             when {
                 expression { currentBuild.result == 'SUCCESS' }
             }
