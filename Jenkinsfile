@@ -1,12 +1,12 @@
 pipeline {
     agent {
         devopstest {
-            label 'dev'
-            // Run the pipeline in privileged mode
+            label 'zip-job-docker' 
+            // Run the pipeline in privileged mode with label zip-job-docker
             customWorkspace '/home/ec2-user/jenkins-slave' // Change the path as needed
         }
     }
-    
+    // Jfrog Artifactory properties
     environment {
         VERSION = '1.2.0'
         ARTIFACTORY_SERVER = 'http://3.84.26.167:8082/artifactory'
@@ -14,20 +14,20 @@ pipeline {
         ARTIFACTORY_PASSWORD = 'Mani@12345'
         ARTIFACTORY_REPOSITORY = "store-artifacts/${VERSION}"
     }
-    
+   
     stages {
-        stage('SCM Checkout') {
+        stage('SCM Checkout') {  //Checkout the sourcecode of project
             steps{
             checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/devisettymanikanta/Radware-Task-Assignment.git']])
             }
         }
-        stage('Build') {
+        stage('Build') { //Build stage should execute the zip_job.py
             steps {
                 sh 'echo "Building the application"'
                 sh 'python3 zip_job.py'
             }
         }
-        stage('Publish') {
+        stage('Publish') {  //Publish stage should upload all the zip files 
             when {
                 expression { currentBuild.result == 'SUCCESS' }
             }
